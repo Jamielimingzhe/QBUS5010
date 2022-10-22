@@ -35,12 +35,14 @@ def update_graph(prediction_type, country_name):
     filtered_df['Date'] = df['Date']
     
     if prediction_type == 'return_prediction':
+        filtered_df = filtered_df.dropna(subset=[country_name + ' 10Y Return', country_name + ' 10Y Prediction'], how='all')
         fig = px.line(
             data_frame = filtered_df,
             x = 'Date',
             y = [country_name + ' 10Y Return', country_name + ' 10Y Prediction'])
         fig.update_layout(yaxis_tickformat=".0%")
     else:
+        filtered_df = filtered_df.dropna(subset=[country_name + ' Price', country_name + ' 10Y Price Prediction'], how='all')
         fig = px.line(
             data_frame = filtered_df,
             x = 'Date',
