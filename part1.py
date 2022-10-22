@@ -1,4 +1,4 @@
-from dash import Dash, dcc, html, Input, Output,dash_table
+from dash import Dash, dcc, html, Input, Output
 import plotly.express as px
 import pandas as pd
 
@@ -11,8 +11,9 @@ app.layout = html.Div([
     html.H1(
             'CAPE Equity Index Forecast'
             ),
-    html.Div([
-        dcc.RadioItems(['Return Prediction', 'Price Prediction'], 'Return Prediction', id='prediction_type', inline=True)
+    dcc.Tabs(id='prediction_type', value='return_prediction', children=[
+    dcc.Tab(label='Return Prediction', value='return_prediction'),
+    dcc.Tab(label='Price Prediction', value='price_prediction'),
     ]),
     html.Div([
         dcc.Dropdown(countries, value='Australia', id='country_name')],
@@ -27,13 +28,18 @@ app.layout = html.Div([
     )
     
 def update_graph(prediction_type, country_name):
+    if country_name == None: 
+        country_name = 'Australia'
+        
     filtered_df = df[[col for col in df.columns if country_name in col]]
     filtered_df['Date'] = df['Date']
-    if prediction_type == 'Return Prediction':
+    
+    if prediction_type == 'return_prediction':
         fig = px.line(
             data_frame = filtered_df,
             x = 'Date',
             y = [country_name + ' 10Y Return', country_name + ' 10Y Prediction'])
+        fig.update_layout(yaxis_tickformat=".0%")
     else:
         fig = px.line(
             data_frame = filtered_df,
