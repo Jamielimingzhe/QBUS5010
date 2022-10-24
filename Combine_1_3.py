@@ -5,9 +5,19 @@ import pandas as pd
 cape = pd.read_excel('CAPE_Data_Final.xlsx')
 countries = ['Australia', 'China', 'Japan', 'USA']
 
-df = pd.read_excel('Factor_Data/US.xlsx',index_col='Ticker_s')
-stock_price = pd.read_excel('US_stock.xlsx')
+rank_dict = {
+  "USA": pd.read_excel('Factor_Ranking/US_rank.xlsx',index_col='Ticker'),
+  "Australia": pd.read_excel('Factor_Ranking/Aus_rank.xlsx',index_col='Ticker'),
+  "China": pd.read_excel('Factor_Ranking/China_rank.xlsx',index_col='Ticker',dtype={'Ticker': object}),
+  "Japan": pd.read_excel('Factor_Ranking/Japan_rank.xlsx',index_col='Ticker',dtype={'Ticker': object})
+}
 
+price_dict = {
+  "USA": pd.read_csv('Factor_Prices/US_stock.csv',index_col='Date'),
+  "Australia": pd.read_csv('Factor_Prices/Aus_stock.csv',index_col='Date'),
+  "China": pd.read_excel('Factor_Prices/China_stock.xlsx',index_col='Date'),
+  "Japan": pd.read_csv('Factor_Prices/Japan_stock.csv',index_col='Date')
+}
 
 app = Dash(__name__)
 
@@ -62,14 +72,13 @@ def update_graph(prediction_type, country_name):
 
 @app.callback(
      Output('factor_graph', 'figure'),
-    #  Input('country_name', 'value'),
+     Input('country_name', 'value'),
      Input('Factor', 'value'),
      Input('Num', 'value'),
     )
-def update_graph(Factor,Num):
-    temp = (stock_price[df[Factor + ' Rank'].sort_values()[0:Num].index].pct_change().mean(axis=1)+1).cumprod()
+def update_graph(Country,Factor,Num):
+    temp = (price_dict[Country].loc['2021-10-20':,rank_dict[Country][Factor].sort_values()[0:Num].index].pct_change().mean(axis=1)+1).cumprod()
     temp = pd.DataFrame(temp,columns=[f'{Factor}_{Num}'])
-    temp.index = stock_price['Date']
     temp.iloc[0,0] = 1
     fig = px.line(
         data_frame = temp,
