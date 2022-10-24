@@ -31,8 +31,7 @@ def update_graph(prediction_type, country_name):
     if country_name == None: 
         country_name = 'Australia'
         
-    filtered_df = df[[col for col in df.columns if country_name in col]]
-    filtered_df['Date'] = df['Date']
+    filtered_df = df[['Date'] + [col for col in df.columns if country_name in col]]
     
     if prediction_type == 'return_prediction':
         filtered_df = filtered_df.dropna(subset=[country_name + ' 10Y Return', country_name + ' 10Y Prediction'], how='all')
