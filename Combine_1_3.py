@@ -1,9 +1,12 @@
 from dash import Dash, dcc, html, Input, Output
+from numpy import datetime64
 import plotly.express as px
 import pandas as pd
 
 cape = pd.read_excel('CAPE_Data_Final.xlsx')
 countries = ['Australia', 'China', 'Japan', 'USA']
+
+benchmarks = pd.read_csv('benchmarks.csv',index_col='Date')
 
 rank_dict = {
   "USA": pd.read_excel('Factor_Ranking/US_rank.xlsx',index_col='Ticker'),
@@ -80,10 +83,11 @@ def update_graph(Country,Factor,Num):
     temp = (price_dict[Country].loc['2021-10-20':,rank_dict[Country][Factor].sort_values()[0:Num].index].pct_change().mean(axis=1)+1).cumprod()
     temp = pd.DataFrame(temp,columns=[f'{Factor}_{Num}'])
     temp.iloc[0,0] = 1
+    temp = pd.concat([temp,benchmarks],axis=1)
     fig = px.line(
         data_frame = temp,
         x = temp.index,
-        y = f'{Factor}_{Num}')
+        y = [f'{Factor}_{Num}',Country])
     # fig.update_layout(yaxis_tickformat=".0%")
     return fig
 
