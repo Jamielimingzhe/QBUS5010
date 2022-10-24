@@ -42,9 +42,8 @@ app.layout = html.Div([
 def update_graph(prediction_type, country_name):
     if country_name == None: 
         country_name = 'Australia'
-        
-    filtered_cape = cape[[col for col in cape.columns if country_name in col]]
-    filtered_cape['Date'] = cape['Date']
+    
+    filtered_cape = cape[['Date'] + [col for col in cape.columns if country_name in col]]
     
     if prediction_type == 'return_prediction':
         filtered_cape = filtered_cape.dropna(subset=[country_name + ' 10Y Return', country_name + ' 10Y Prediction'], how='all')
