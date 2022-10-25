@@ -18,9 +18,10 @@ rank_dict = {
 price_dict = {
   "USA": pd.read_csv('Factor_Prices/US_stock.csv',index_col='Date'),
   "Australia": pd.read_csv('Factor_Prices/Aus_stock.csv',index_col='Date'),
-  "China": pd.read_excel('Factor_Prices/China_stock.xlsx',index_col='Date'),
+  "China": pd.read_csv('Factor_Prices/China_stock.csv',index_col='Date'),
   "Japan": pd.read_csv('Factor_Prices/Japan_stock.csv',index_col='Date')
 }
+price_dict["China"].columns = [i[1:] for i in price_dict["China"].columns]
 
 app = Dash(__name__)
 
