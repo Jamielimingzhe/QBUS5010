@@ -26,13 +26,14 @@ price_dict["China"].columns = [i[1:] for i in price_dict["China"].columns]
 app = Dash(__name__)
 
 tab1 = html.Div([
+    html.H3('Choose your factor:'),
     dcc.Dropdown(['Momentum','Value','Profitability'], value='Momentum', id='Factor'),
+    html.H3('How many stocks:'),
     dcc.Dropdown([10,20,30], value=30, id='Num')
-    # dcc.Dropdown(['Market Index'], value='Australia', id='Benchmark')
 ])
 
 tab2 = html.Div([
-    html.H3('Tab 2'),
+    html.H3('Select your stocks:'),
     dcc.Dropdown(
         id='my-input',
         multi=True,
@@ -110,31 +111,54 @@ def update_graph(prediction_type, country_name):
     return fig
 
 @app.callback(
+     Output('my-input', 'options'),
+     Output('my-input', 'value'),
+     Input('country_name', 'value'),
+    )
+def update_tab(Country):
+    if Country == None: 
+        Country = 'Australia'
+    opts = price_dict[Country].columns
+    options= [{'label':opt, 'value':opt} for opt in opts] 
+    value = opts[:10]
+    return options,value
+
+
+@app.callback(
      Output('factor_graph', 'figure'),
+     Input('tabs','value'),
+     Input('my-input','value'),
      Input('country_name', 'value'),
      Input('Factor', 'value'),
      Input('Num', 'value'),
     )
-def update_graph(Country,Factor,Num):
-    temp = (price_dict[Country].loc['2021-10-20':,rank_dict[Country][Factor].sort_values()[0:Num].index].pct_change().mean(axis=1)+1).cumprod()
-    temp = pd.DataFrame(temp,columns=[f'{Factor}_{Num}'])
-    temp.iloc[0,0] = 1
-    temp = pd.concat([temp,benchmarks],axis=1)
-    fig = px.line(
+def update_graph(Tabs,Tickers,Country,Factor,Num):
+    if Country == None: 
+        Country = 'Australia'
+    if Factor == None: 
+        Factor = 'Momentum'
+    if Num == None: 
+        Num = 30
+    
+    if Tabs == '1':
+        temp = (price_dict[Country].loc['2021-10-20':,rank_dict[Country][Factor].sort_values()[0:Num].index].pct_change().mean(axis=1)+1).cumprod()
+        temp = pd.DataFrame(temp,columns=[f'{Factor}_{Num}'])
+        temp.iloc[0,0] = 1
+        temp = pd.concat([temp,benchmarks],axis=1)
+        fig = px.line(
         data_frame = temp,
         x = temp.index,
         y = [f'{Factor}_{Num}',Country])
-    # fig.update_layout(yaxis_tickformat=".0%")
+    else:
+        temp = (price_dict[Country].loc['2021-10-20':,Tickers].pct_change().mean(axis=1)+1).cumprod()
+        temp = pd.DataFrame(temp,columns=['Custom Porfolio'])
+        temp.iloc[0,0] = 1
+        temp = pd.concat([temp,benchmarks],axis=1)
+        fig = px.line(
+        data_frame = temp,
+        x = temp.index,
+        y = ['Custom Porfolio',Country])
     return fig
-
-@app.callback(
-     Output('my-input', 'options'),
-     Input('country_name', 'value'),
-    )
-def update_tab(Country):
-    opts = price_dict[Country].columns
-    options= [{'label':opt, 'value':opt} for opt in opts] 
-    return options
-
+    
 if __name__ == '__main__':
     app.run_server(debug=True)
