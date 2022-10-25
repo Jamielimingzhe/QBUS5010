@@ -42,18 +42,21 @@ tab2 = html.Div([
 
 
 app.layout = html.Div([
-    html.H1(
-            'CAPE Equity Index Forecast'
-            ),
-    dcc.Tabs(id='prediction_type', value='return_prediction', children=[
-    dcc.Tab(label='Return Prediction', value='return_prediction'),
-    dcc.Tab(label='Price Prediction', value='price_prediction'),
-    ]),
+    html.H1("Equity Valuation and Stock Rankings", style={'textAlign': 'center'}),
     html.Div([
-        dcc.Dropdown(countries, value='Australia', id='country_name')],
-        style={'width': '48%', 'display': 'inline-block'}),
-    dcc.Graph(id='cape_graph'),
-    html.H1(
+        html.H2(
+                'CAPE Equity Index Forecast'
+                ),
+        dcc.Tabs(id='prediction_type', value='return_prediction', children=[
+        dcc.Tab(label='Return Prediction', value='return_prediction'),
+        dcc.Tab(label='Price Prediction', value='price_prediction'),
+        ]),
+        html.Div([
+            dcc.Dropdown(countries, value='Australia', id='country_name')],
+            style={'width': '48%', 'display': 'inline-block'}),
+        dcc.Graph(id='cape_graph')
+    ],style={'width': '90%','margin': 'Auto'}),
+    html.H2(
             'Portfolio Backtest'
             ),
     html.Div([
@@ -75,13 +78,6 @@ app.layout = html.Div([
             dcc.Graph(id='factor_graph')
         ],style = {'padding':5,'flex':0.8}),
     ],style={'display': 'flex', 'flex-direction': 'row'})
-    
-    # html.Div([
-    #     dcc.Dropdown(['Momentum','Value','Profitability'], value='Momentum', id='Factor'),
-    #     dcc.Dropdown([10,20,30], value=30, id='Num')])
-    #     dcc.Dropdown(['Market Index'], value='Australia', id='Benchmark')],
-    #     style={'width': '49%', 'display': 'inline-block'}),
-    #dcc.Graph(id='factor_graph'),
 ])
 
 @app.callback(
@@ -148,7 +144,8 @@ def update_graph(Tabs,Tickers,Country,Factor,Num):
         fig = px.line(
         data_frame = temp,
         x = temp.index,
-        y = [f'{Factor}_{Num}',Country])
+        y = [f'{Factor}_{Num}',Country],
+        title = f'{Country} {Num} Stock {Factor} Facotr Portfolio 1Y Performance')
     else:
         temp = (price_dict[Country].loc['2021-10-20':,Tickers].pct_change().mean(axis=1)+1).cumprod()
         temp = pd.DataFrame(temp,columns=['Custom Porfolio'])
@@ -157,7 +154,8 @@ def update_graph(Tabs,Tickers,Country,Factor,Num):
         fig = px.line(
         data_frame = temp,
         x = temp.index,
-        y = ['Custom Porfolio',Country])
+        y = ['Custom Porfolio',Country],
+        title = f'{Country} {len(Tickers)} Stock Custom Portfolio 1Y Performance')
     return fig
     
 if __name__ == '__main__':
