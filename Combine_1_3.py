@@ -25,6 +25,21 @@ price_dict["China"].columns = [i[1:] for i in price_dict["China"].columns]
 
 app = Dash(__name__)
 
+tab1 = html.Div([
+    dcc.Dropdown(['Momentum','Value','Profitability'], value='Momentum', id='Factor'),
+    dcc.Dropdown([10,20,30], value=30, id='Num')
+    # dcc.Dropdown(['Market Index'], value='Australia', id='Benchmark')
+])
+
+tab2 = html.Div([
+    html.H3('Tab 2'),
+    dcc.Dropdown(
+        id='my-input',
+        multi=True,
+    )
+])
+
+
 app.layout = html.Div([
     html.H1(
             'CAPE Equity Index Forecast'
@@ -41,11 +56,31 @@ app.layout = html.Div([
             'Portfolio Backtest'
             ),
     html.Div([
-        dcc.Dropdown(['Momentum','Value','Profitability'], value='Momentum', id='Factor'),
-        dcc.Dropdown([10,20,30], value=30, id='Num')],
-        # dcc.Dropdown(['Market Index'], value='Australia', id='Benchmark')],
-        style={'width': '48%', 'display': 'inline-block'}),
-    dcc.Graph(id='factor_graph'),
+        html.Div(children=[
+            dcc.Tabs(id='tabs', value='1', children=[
+                dcc.Tab(
+                    label='Presets',
+                    value='1',
+                    children=tab1
+                ),
+                dcc.Tab(
+                    label='Custom',
+                    value='2',
+                    children=tab2
+                ),
+            ]),
+        ],style = {'padding':5,'flex':0.2}),
+        html.Div(children=[
+            dcc.Graph(id='factor_graph')
+        ],style = {'padding':5,'flex':0.8}),
+    ],style={'display': 'flex', 'flex-direction': 'row'})
+    
+    # html.Div([
+    #     dcc.Dropdown(['Momentum','Value','Profitability'], value='Momentum', id='Factor'),
+    #     dcc.Dropdown([10,20,30], value=30, id='Num')])
+    #     dcc.Dropdown(['Market Index'], value='Australia', id='Benchmark')],
+    #     style={'width': '49%', 'display': 'inline-block'}),
+    #dcc.Graph(id='factor_graph'),
 ])
 
 @app.callback(
@@ -91,6 +126,15 @@ def update_graph(Country,Factor,Num):
         y = [f'{Factor}_{Num}',Country])
     # fig.update_layout(yaxis_tickformat=".0%")
     return fig
+
+@app.callback(
+     Output('my-input', 'options'),
+     Input('country_name', 'value'),
+    )
+def update_tab(Country):
+    opts = price_dict[Country].columns
+    options= [{'label':opt, 'value':opt} for opt in opts] 
+    return options
 
 if __name__ == '__main__':
     app.run_server(debug=True)
