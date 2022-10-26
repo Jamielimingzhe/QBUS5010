@@ -23,7 +23,18 @@ price_dict = {
 }
 price_dict["China"].columns = [i[1:] for i in price_dict["China"].columns]
 
-aus_factor = pd.read_csv('Factor_Data/Aus.csv',index_col='Ticker_s')
+factor_dict = {
+  "USA": pd.read_csv('Factor_Data/US.csv',index_col='Ticker_s'),
+  "Australia": pd.read_csv('Factor_Data/Aus.csv',index_col='Ticker_s'),
+  "China": pd.read_csv('Factor_Data/China.csv',index_col='Ticker_s'),
+  "Japan": pd.read_csv('Factor_Data/Japan.csv',index_col='Ticker_s')
+}
+factor_dict['China'].index = [i[1:] for i in factor_dict['China'].index.astype(str)]
+factor_dict['China']['Ticker'] = [i[1:] for i in factor_dict['China']['Ticker'].astype(str)]
+factor_dict['Japan'].index = factor_dict['Japan'].index.astype(str)
+factor_dict['Japan']['Ticker'] = factor_dict['Japan']['Ticker'].astype(str)
+
+
 
 app = Dash(__name__)
 
@@ -190,7 +201,7 @@ def update_graph(Tabs,Tickers,Country,Factor,Num):
     Input('my-input','value'),
     Input('country_name', 'value'))
 def update_table(Tickers,Country):
-    custom_table = aus_factor.loc[Tickers,['Ticker','Name','MKT CAP','Sector','1Y Return','P/E','ROE']]
+    custom_table = factor_dict[Country].loc[Tickers,['Ticker','Name','MKT CAP','Sector','1Y Return','P/E','ROE']]
     return custom_table.to_dict('records')
 
 if __name__ == '__main__':
