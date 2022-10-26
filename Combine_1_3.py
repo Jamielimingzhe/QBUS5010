@@ -77,7 +77,7 @@ app.layout = html.Div([
                     children=tab2
                 ),
             ]),
-        ],style = {'padding':5,'flex':0.2}),
+        ],style = {'padding':5,'flex':0.2,'position':'relative',"top":"30px"}),
         html.Div(children=[
             dcc.Graph(id='factor_graph')
         ],style = {'padding':5,'flex':0.8}),
@@ -108,6 +108,14 @@ def update_graph(prediction_type, country_name):
             data_frame = filtered_cape,
             x = 'Date',
             y = [country_name + ' Price', country_name + ' 10Y Price Prediction'])
+    fig.update_layout(legend=dict(
+    title = None,
+    yanchor="top",
+    y=0.99,
+    xanchor="left",
+    x=0.05
+    ))
+
     return fig
 
 @app.callback(
@@ -160,6 +168,12 @@ def update_graph(Tabs,Tickers,Country,Factor,Num):
         x = temp.index,
         y = ['Custom Porfolio',Country],
         title = f'{Country} {len(Tickers)} Stock Custom Portfolio 1Y Performance')
+    fig.update_layout(legend=dict(
+        title = None,
+        yanchor="top",
+        y=0.99,
+        xanchor="left",
+        x=0.85))
     return fig
     
 if __name__ == '__main__':
