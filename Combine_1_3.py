@@ -1,4 +1,4 @@
-from dash import Dash, dcc, html, Input, Output
+from dash import Dash, dcc, html, Input, Output,dash_table
 from numpy import datetime64
 import plotly.express as px
 import pandas as pd
@@ -23,6 +23,8 @@ price_dict = {
 }
 price_dict["China"].columns = [i[1:] for i in price_dict["China"].columns]
 
+aus_factor = pd.read_csv('Factor_Data/Aus.csv',index_col='Ticker_s')
+
 app = Dash(__name__)
 
 tab1 = html.Div([
@@ -37,6 +39,13 @@ tab2 = html.Div([
     dcc.Dropdown(
         id='my-input',
         multi=True,
+    ),
+    html.H6(' '),
+    dash_table.DataTable(
+        id='datatable-paging',
+        columns=[{'id': c, 'name': c} for c in ['Ticker','Name','MKT CAP','Sector','1Y Return','P/E','ROE']],
+        fixed_rows={'headers': True},
+        style_table={'height': '180px','width':'400px', 'overflowY': 'auto', 'overflowX': 'auto'}
     )
 ])
 
@@ -59,10 +68,10 @@ app.layout = html.Div([
         dcc.Tab(label='Price Prediction', value='price_prediction'),
         ]),
         dcc.Graph(id='cape_graph')
-    ],style={'width': '90%','margin': 'Auto'}),
+    ],style={'width': '95%','margin': 'Auto'}),
     html.H2(
         'Portfolio Backtest'
-    ,style={'width': '90%','margin': 'Auto'}),   
+    ,style={'width': '95%','margin': 'Auto'}),   
     html.Div([
         html.Div(children=[
             dcc.Tabs(id='tabs', value='1', children=[
@@ -77,11 +86,11 @@ app.layout = html.Div([
                     children=tab2
                 ),
             ]),
-        ],style = {'padding':5,'flex':0.2,'position':'relative',"top":"30px"}),
+        ],style = {'padding':5,'flex':0.3,'position':'relative',"top":"30px"}),
         html.Div(children=[
             dcc.Graph(id='factor_graph')
-        ],style = {'padding':5,'flex':0.8}),
-    ],style={'display': 'flex', 'flex-direction': 'row','width': '90%','margin': 'Auto'})
+        ],style = {'padding':5,'flex':0.7}),
+    ],style={'display': 'flex', 'flex-direction': 'row','width': '95%','margin': 'Auto'})
 ])
 
 @app.callback(
@@ -176,5 +185,13 @@ def update_graph(Tabs,Tickers,Country,Factor,Num):
         x=0.85))
     return fig
     
+@app.callback(
+    Output('datatable-paging', 'data'),
+    Input('my-input','value'),
+    Input('country_name', 'value'))
+def update_table(Tickers,Country):
+    custom_table = aus_factor.loc[Tickers,['Ticker','Name','MKT CAP','Sector','1Y Return','P/E','ROE']]
+    return custom_table.to_dict('records')
+
 if __name__ == '__main__':
     app.run_server(debug=True)
