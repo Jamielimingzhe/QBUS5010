@@ -43,6 +43,13 @@ tab2 = html.Div([
 
 app.layout = html.Div([
     html.H1("Equity Valuation and Stock Rankings", style={'textAlign': 'center'}),
+    html.Div([       
+        html.H3("Choose a Country:",
+        style={'padding':0,'flex':1}),
+        html.Div([
+        dcc.Dropdown(countries, value='Australia', id='country_name')]
+        ,style={'padding':0,'flex':1})
+    ], style={'display': 'flex', 'flex-direction': 'row','width': '30%','margin': 'Auto'}),
     html.Div([
         html.H2(
                 'CAPE Equity Index Forecast'
@@ -51,9 +58,6 @@ app.layout = html.Div([
         dcc.Tab(label='Return Prediction', value='return_prediction'),
         dcc.Tab(label='Price Prediction', value='price_prediction'),
         ]),
-        html.Div([
-            dcc.Dropdown(countries, value='Australia', id='country_name')],
-            style={'width': '48%', 'display': 'inline-block'}),
         dcc.Graph(id='cape_graph')
     ],style={'width': '90%','margin': 'Auto'}),
     html.H2(
