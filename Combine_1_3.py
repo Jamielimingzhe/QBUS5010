@@ -49,7 +49,7 @@ app.layout = html.Div([
         html.Div([
         dcc.Dropdown(countries, value='Australia', id='country_name')]
         ,style={'flex':1,'position':'relative',"top":"10px"})
-    ], style={'display': 'flex', 'flex-direction': 'row','width': '23%','margin': 'Auto'}),
+    ], style={'display': 'flex', 'flex-direction': 'row','width': '30%','margin': 'Auto'}),
     html.Div([
         html.H2(
                 'CAPE Equity Index Forecast'
@@ -61,8 +61,8 @@ app.layout = html.Div([
         dcc.Graph(id='cape_graph')
     ],style={'width': '90%','margin': 'Auto'}),
     html.H2(
-            'Portfolio Backtest'
-            ),
+        'Portfolio Backtest'
+    ,style={'width': '90%','margin': 'Auto'}),   
     html.Div([
         html.Div(children=[
             dcc.Tabs(id='tabs', value='1', children=[
@@ -81,7 +81,7 @@ app.layout = html.Div([
         html.Div(children=[
             dcc.Graph(id='factor_graph')
         ],style = {'padding':5,'flex':0.8}),
-    ],style={'display': 'flex', 'flex-direction': 'row'})
+    ],style={'display': 'flex', 'flex-direction': 'row','width': '90%','margin': 'Auto'})
 ])
 
 @app.callback(
