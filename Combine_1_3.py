@@ -45,11 +45,11 @@ app.layout = html.Div([
     html.H1("Equity Valuation and Stock Rankings", style={'textAlign': 'center'}),
     html.Div([       
         html.H3("Choose a Country:",
-        style={'padding':0,'flex':1}),
+        style={'flex':1,'position':'relative',"top":"0px"}),
         html.Div([
         dcc.Dropdown(countries, value='Australia', id='country_name')]
-        ,style={'padding':0,'flex':1})
-    ], style={'display': 'flex', 'flex-direction': 'row','width': '30%','margin': 'Auto'}),
+        ,style={'flex':1,'position':'relative',"top":"10px"})
+    ], style={'display': 'flex', 'flex-direction': 'row','width': '23%','margin': 'Auto'}),
     html.Div([
         html.H2(
                 'CAPE Equity Index Forecast'
