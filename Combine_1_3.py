@@ -193,7 +193,7 @@ def update_graph(Tabs,Tickers,Country,Factor,Num):
         yanchor="top",
         y=0.99,
         xanchor="left",
-        x=0.85))
+        x=0.82))
     return fig
     
 @app.callback(
