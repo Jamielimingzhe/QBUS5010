@@ -56,6 +56,7 @@ tab2 = html.Div([
         id='datatable-paging',
         columns=[{'id': c, 'name': c} for c in ['Ticker','Name','MKT CAP','Sector','1Y Return','P/E','ROE']],
         fixed_rows={'headers': True},
+        fill_width=False,
         style_table={'height': '180px','width':'400px', 'overflowY': 'auto', 'overflowX': 'auto'}
     )
 ])
