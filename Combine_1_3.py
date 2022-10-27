@@ -202,7 +202,7 @@ def update_graph(Tabs,Tickers,Country,Factor,Num):
     Input('my-input','value'),
     Input('country_name', 'value'))
 def update_table(Tickers,Country):
-    custom_table = factor_dict[Country].loc[Tickers,['Ticker','Name','MKT CAP','Sector','1Y Return','P/E','ROE']]
+    custom_table = factor_dict[Country].loc[Tickers,['Ticker','Name','MKT CAP (US$M)','Sector','1Y Return','P/E','ROE']]
     return custom_table.to_dict('records')
 
 if __name__ == '__main__':
