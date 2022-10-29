@@ -34,6 +34,11 @@ factor_dict['China']['Ticker'] = [i[1:] for i in factor_dict['China']['Ticker'].
 factor_dict['Japan'].index = factor_dict['Japan'].index.astype(str)
 factor_dict['Japan']['Ticker'] = factor_dict['Japan']['Ticker'].astype(str)
 
+factor_columns = {
+  "Momentum": ['Momentum Rank','Ticker','Name','MKT CAP (US$M)','Sector','1Y Return'],
+  "Value": ['Value Rank','Ticker','Name','MKT CAP (US$M)','Sector','P/S','P/E','P/FCF','P/B'],
+  "Profitability": ['Profitability Rank','Ticker','Name','MKT CAP (US$M)','Sector','ROA','ROE','Gross margin','GPOA']
+}
 
 
 app = Dash(__name__)
@@ -54,10 +59,9 @@ tab2 = html.Div([
     html.H6(' '),
     dash_table.DataTable(
         id='datatable-paging',
-        columns=[{'id': c, 'name': c} for c in ['Ticker','Name','MKT CAP','Sector','1Y Return','P/E','ROE']],
-        fixed_rows={'headers': True},
+        style_cell={'textAlign': 'center'},
         fill_width=False,
-        style_table={'height': '180px','width':'400px', 'overflowY': 'auto', 'overflowX': 'auto'}
+        style_table={'height': '180px','width':'400px', 'overflowY': 'auto'}
     )
 ])
 
@@ -76,7 +80,7 @@ app.layout = html.Div([
             html.P("This conversion happens behind the scenes by Dash's JavaScript front-end")
         ], className="help-tip"),
         html.H2(
-                'CAPE Equity Index Forecast'
+                'CAPE Equity Index Forecasts'
                 ),
         dcc.Tabs(id='prediction_type', value='return_prediction', children=[
         dcc.Tab(label='Return Prediction', value='return_prediction'),
@@ -84,11 +88,41 @@ app.layout = html.Div([
         ]),
         dcc.Graph(id='cape_graph')
     ],style={'width': '95%','margin': 'Auto'}),
+
     html.Div([
         html.P("This conversion happens behind the scenes by Dash's JavaScript front-end")
-    ], className="help-tip"),
+    ], className="help-tip1"),
     html.H2(
-        'Portfolio Backtest'
+        'Stock Factor Rankings'
+    ,style={'width': '95%','margin': 'Auto'}),   
+    html.H6(' '),
+    html.Div([
+        dcc.Tabs(id='Factor_type', value='Momentum', children=[
+        dcc.Tab(label='Momentum', value='Momentum'),
+        dcc.Tab(label='Value', value='Value'),
+        dcc.Tab(label='Profitability', value='Profitability'),
+        ]),
+        dash_table.DataTable(
+        id='table_large',
+        style_as_list_view=True,
+        style_cell={'textAlign': 'center'},
+        style_header={
+            'backgroundColor': '#1b4d9e',
+            'color': 'white',
+            'fontWeight': 'bold'
+        },
+        page_current=0,
+        page_size=10,
+        page_action='custom'
+        )
+    ],style={'width': '95%','margin': 'Auto'}),
+
+
+    html.Div([
+        html.P("This conversion happens behind the scenes by Dash's JavaScript front-end")
+    ], className="help-tip2"),
+    html.H2(
+        'Portfolio Backtesting Tool'
     ,style={'width': '95%','margin': 'Auto'}),   
     html.Div([
         html.Div(children=[
@@ -208,8 +242,20 @@ def update_graph(Tabs,Tickers,Country,Factor,Num):
     Input('my-input','value'),
     Input('country_name', 'value'))
 def update_table(Tickers,Country):
-    custom_table = factor_dict[Country].loc[Tickers,['Ticker','Name','MKT CAP (US$M)','Sector','1Y Return','P/E','ROE']]
+    custom_table = factor_dict[Country].loc[Tickers,['Ticker','Name','MKT CAP (US$M)','Sector']]
     return custom_table.to_dict('records')
+
+@app.callback(
+    Output('table_large', 'data'),
+    Input('table_large', "page_current"),
+    Input('table_large', "page_size"),
+    Input('country_name', 'value'),
+    Input('Factor_type', "value"))
+def update_large_table(page_current,page_size,Country,Factor_type):
+    large_table = factor_dict[Country].loc[:,factor_columns[Factor_type]].sort_values(f'{Factor_type} Rank')
+    return large_table.iloc[
+        page_current*page_size:(page_current+ 1)*page_size
+    ].to_dict('records')
 
 if __name__ == '__main__':
     app.run_server(debug=True)
