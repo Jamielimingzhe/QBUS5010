@@ -119,7 +119,7 @@ app.layout = html.Div([
 
 
     html.Div([
-        html.P("This backtesting tool shows portfolio performance for the last year. The presets tab will create an equal weight portfolio of the highest ranking stocks in the selected country based on what factor and how many stocks you want. The custom tab lets you create your own porfolio by selecting multiple stocks in the dropdown menu. The construted portfolio is benchmarked against the country's equity index.")
+        html.P("This backtesting tool shows portfolio performance for the past 1 year. The presets tab will create an equal weight portfolio of the highest ranking stocks in the selected country based on what factor and how many stocks you want. The custom tab lets you create your own porfolio by selecting multiple stocks in the dropdown menu. The construted portfolio is benchmarked against the country's equity index.")
     ], className="help-tip2"),
     html.H2(
         'Portfolio Backtesting Tool'
