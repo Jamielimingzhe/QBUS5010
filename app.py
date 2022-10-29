@@ -77,7 +77,7 @@ app.layout = html.Div([
     ], style={'display': 'flex', 'flex-direction': 'row','width': '30%','margin': 'Auto'}),
     html.Div([
         html.Div([
-            html.P("This conversion happens behind the scenes by Dash's JavaScript front-end")
+            html.P("This cahrt shows the predict annualised returns/prices for the next 10 years of the selected country's market index aginst its realised annualised returns/prices. The predictions are only valid on average in the long-term (10Y) and should not be used to justify daily market timing decisions.")
         ], className="help-tip"),
         html.H2(
                 'CAPE Equity Index Forecasts'
@@ -90,7 +90,7 @@ app.layout = html.Div([
     ],style={'width': '95%','margin': 'Auto'}),
 
     html.Div([
-        html.P("This conversion happens behind the scenes by Dash's JavaScript front-end")
+        html.P("This table rank stocks in the selected country by factors (Momentum, Value, Profitability) that predict higher expected return. Higher ranking stocks is expected to outperform lower ranking stocks in the future. Momentum is measured using past 1Y returns. Value is measured using an equal weighted average of four metrics: Price-to-Sales, Price-to-Earnings, Price-to-Free Cash Flow, Price-to-Book Value. Profitability is also mesured using an equal weighted average of four metrics: Return on Assets, Return on Equity, Gross Margin, Gross Profit on Assets. Missing data is ignored for the calculation of the average.")
     ], className="help-tip1"),
     html.H2(
         'Stock Factor Rankings'
@@ -119,7 +119,7 @@ app.layout = html.Div([
 
 
     html.Div([
-        html.P("This conversion happens behind the scenes by Dash's JavaScript front-end")
+        html.P("This backtesting tool shows portfolio performance for the last year. The presets tab will create an equal weight portfolio of the highest ranking stocks in the selected country based on what factor and how many stocks you want. The custom tab lets you create your own porfolio by selecting multiple stocks in the dropdown menu. The construted portfolio is benchmarked against the country's equity index.")
     ], className="help-tip2"),
     html.H2(
         'Portfolio Backtesting Tool'
