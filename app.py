@@ -77,7 +77,7 @@ app.layout = html.Div([
     ], style={'display': 'flex', 'flex-direction': 'row','width': '30%','margin': 'Auto'}),
     html.Div([
         html.Div([
-            html.P("This cahrt shows the predict annualised returns/prices for the next 10 years of the selected country's market index aginst its realised annualised returns/prices. The predictions are only valid on average in the long-term (10Y) and should not be used to justify daily market timing decisions.")
+            html.P("This chart shows annualised returns/prices predicted by the CAPE ratio for the next 10 years aginst its realised annualised returns/prices. For example, Australia's Return prediction in Sep 2022 is 6%, this means the model predicts the annualised return of Australia's equity market index will be 6 percent for the next 10 years. The predictions are only valid on average in the long-term (10Y) and should not be used to justify daily market timing decisions.")
         ], className="help-tip"),
         html.H2(
                 'CAPE Equity Index Forecasts'
@@ -90,7 +90,7 @@ app.layout = html.Div([
     ],style={'width': '95%','margin': 'Auto'}),
 
     html.Div([
-        html.P("This table rank stocks in the selected country by factors (Momentum, Value, Profitability) that predict higher expected return. Higher ranking stocks is expected to outperform lower ranking stocks in the future. Momentum is measured using past 1Y returns. Value is measured using an equal weighted average of four metrics: Price-to-Sales, Price-to-Earnings, Price-to-Free Cash Flow, Price-to-Book Value. Profitability is also mesured using an equal weighted average of four metrics: Return on Assets, Return on Equity, Gross Margin, Gross Profit on Assets. Missing data is ignored for the calculation of the average.")
+        html.P("This table rank stocks in the selected country by factors (Momentum, Value, Profitability) that predict higher expected returns. Higher ranking stocks is expected to outperform lower ranking stocks in the future. Momentum is measured using past 1Y returns. Value is measured using an equal weighted average of four metrics: Price-to-Sales, Price-to-Earnings, Price-to-Free Cash Flow, Price-to-Book Value. Profitability is also mesured using an equal weighted average of four metrics: Return on Assets, Return on Equity, Gross Margin, Gross Profit on Assets. Missing data is ignored for the calculation of the average.")
     ], className="help-tip1"),
     html.H2(
         'Stock Factor Rankings'
